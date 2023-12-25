@@ -3,6 +3,16 @@ session_start();
 require('../koneksi.php');
 
 
+function userExist($username, $conn) {
+    $sql = "SELECT id, username, password FROM users WHERE username = '".$username."'";
+    $result = $conn->query($sql);
+
+    if ($result->num_rows > 0) {
+        return false;
+    }
+    return true;
+}
+
 function validateUser($username, $password, $conn) {
     $sql = "SELECT id, username, password FROM users WHERE username = '".$username."'";
     $result = $conn->query($sql);
@@ -54,14 +64,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $password = $_POST["password"];
         $c_password = $_POST["c_password"];
 
-        if ($password === $c_password) {
-            if (registerUser($username, $password, $conn)) {
-                header("Location: ../login.php");
-                exit();
+        if (userExist($username,$conn)){
+            if ($password === $c_password) {
+                if (registerUser($username, $password, $conn)) {
+                    header("Location: ../login.php");
+                    exit();
+                } else {
+                    ?>
+                    <script language="JavaScript">
+                        alert('Registrasi gagal. Silahkan diulang kembali!');
+                        document.location='../register.php';
+                    </script>
+                    <?php
+                }
             } else {
                 ?>
                 <script language="JavaScript">
-                    alert('Registrasi gagal. Silahkan diulang kembali!');
+                    alert('Password dan konfirmasi password tidak sama. Silahkan diulang kembali!');
                     document.location='../register.php';
                 </script>
                 <?php
@@ -69,7 +88,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         } else {
             ?>
             <script language="JavaScript">
-                alert('Password dan konfirmasi password tidak sama. Silahkan diulang kembali!');
+                alert('Username sudah ada');
                 document.location='../register.php';
             </script>
             <?php

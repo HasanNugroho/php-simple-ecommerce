@@ -11,13 +11,23 @@
 
 <body>
 <div class="container">
-    <div class="card">
+    <div class="card mt-4">
         <div class="row m-auto justify-content-center">
-            <form action="./lib/auth.php" method="post" class="mt-4">
+            <form action="./lib/auth.php" method="post" class="mt-5">
                 <h1 class="mb-3">Register</h1>
                 <div class="mb-3 text-left">
                     <label for="reg-username">Username:</label>
                     <input type="text" class="form-control" id="reg-username" name="username" required>
+                </div>
+                
+                <div class="mb-3 text-left">
+                    <label for="reg-username">Name:</label>
+                    <input type="text" class="form-control" id="reg-username" name="name" required>
+                </div>
+                
+                <div class="mb-3 text-left">
+                    <label for="reg-username">Nim:</label>
+                    <input type="text" class="form-control" id="reg-username" name="nim" required>
                 </div>
 
                 <div class="mb-3 text-left">

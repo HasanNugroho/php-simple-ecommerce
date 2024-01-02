@@ -1,50 +1,16 @@
 <?php
 session_start();
-require('../koneksi.php');
 
+require('./User.php');
 
-function userExist($username, $conn) {
-    $sql = "SELECT id, username, password FROM users WHERE username = '".$username."'";
-    $result = $conn->query($sql);
-
-    if ($result->num_rows > 0) {
-        return false;
-    }
-    return true;
-}
-
-function validateUser($username, $password, $conn) {
-    $sql = "SELECT id, username, password FROM users WHERE username = '".$username."'";
-    $result = $conn->query($sql);
-
-    if ($result->num_rows > 0) {
-        $row = $result->fetch_assoc();
-        
-        if (password_verify($password, $row['password'])) {
-            return $row['id'];
-        }
-    }
-    echo $username;
-    return false;
-}
-
-function registerUser($username, $password, $conn) {
-    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-
-    $sql = "INSERT INTO users (username, password) VALUES ('".$username."', '".$hashedPassword."')";
-    if ($conn->query($sql) === TRUE) {
-        return true;
-    } else {
-        return false;
-    }
-}
+$user = new User();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST["login"])) {
         $username = $_POST["username"];
         $password = $_POST["password"];
 
-        $userId = validateUser($username, $password, $conn);
+        $userId = $user->validateUser($username, $password);
         if ($userId !== false) {
             $_SESSION["user_id"] = $userId;
             $_SESSION["username"] = $username;
@@ -61,12 +27,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     } elseif (isset($_POST["register"])) {
         $username = $_POST["username"];
+        $name = $_POST["name"];
+        $nim = $_POST["nim"];
         $password = $_POST["password"];
         $c_password = $_POST["c_password"];
 
-        if (userExist($username,$conn)){
+        if ($user->userExist($username, $nim)){
             if ($password === $c_password) {
-                if (registerUser($username, $password, $conn)) {
+                if ($user->registerUser($username, $password, $name, $nim)) {
                     header("Location: ../login.php");
                     exit();
                 } else {

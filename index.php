@@ -1,9 +1,11 @@
 <?php
 session_start();
-require('./koneksi.php');
 if (!isset($_SESSION["user_id"])){
     header("Location: ./login.php");
 }
+require('./lib/Product.php');
+$product = new Product();
+
 ?>
 <!doctype html>
 <html lang="en">
@@ -64,8 +66,9 @@ if (!isset($_SESSION["user_id"])){
     <div class="container">
         <div class="row mt-4">
             <?php
-            $data = mysqli_query($conn,"select * from products");
-            while($d = mysqli_fetch_assoc($data)){
+            $data = $product->get_public_products();
+            if (is_array($data) || is_object($data)) {
+            foreach($data as $d) {
             ?>
             <a href="./detail_product.php?id=<?php echo $d['id']; ?>" class="text-decoration-none col-md-4">
                 <!-- <div class=""> -->
@@ -79,6 +82,8 @@ if (!isset($_SESSION["user_id"])){
                 </div>
                 <!-- </div> -->
             </a>
+            <?php } } else {?>
+                <div class="text-center">Produk tidak tersedia</div>
             <?php }?>
         </div>
     </div>

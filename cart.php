@@ -1,9 +1,11 @@
 <?php
 session_start();
-require('./koneksi.php');
 if (!isset($_SESSION['user_id'])){
     header("Location: ./login.php");
 }
+require('./lib/CartManager.php');
+$cart = new CartManager();
+$data = $cart->get_carts($_SESSION['user_id']);
 ?>
 <!doctype html>
 <html lang="en">
@@ -77,15 +79,10 @@ if (!isset($_SESSION['user_id'])){
                 </thead>
                 <tbody>
                     <?php
-                    $uid = $_SESSION['user_id'];
-                    $data = mysqli_query($conn,"SELECT ci.id, p.name, p.price, ci.qty, ci.subtotal FROM cart c 
-                    JOIN cart_item ci ON c.id = ci.cart_id
-                    JOIN products p ON ci.product_id = p.id WHERE c.user_id = '$uid';");
-                    $index = 1;
-                    while($d = mysqli_fetch_assoc($data)){
+                    foreach($data as $index => $d){
                     ?>
                     <tr>
-                        <th scope="row"><?php echo $index++; ?></th>
+                        <th scope="row"><?php echo $index; ?></th>
                         <td><?php echo $d['name']; ?></td>
                         <td><?php echo $d['qty']; ?></td>
                         <td><?php echo $d['price']; ?></td>

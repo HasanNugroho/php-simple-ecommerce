@@ -1,14 +1,14 @@
 <?php
 session_start();
-require('./koneksi.php');
 if (!isset($_SESSION['user_id'])){
     header("Location: ./login.php");
 }
+require('./lib/Product.php');
 
 $userId = $_SESSION['user_id'];
 $id = $_GET['id'];
-$query = mysqli_query($conn, "select * from products where id='$id' and user_id = '$userId'");
-$data = $query->fetch_array();
+$product = new Product();
+$data = $product->get_product_private_byId($userId,$id);
 
 if (!isset($data)) {
     header("Location: ./product_list.php");

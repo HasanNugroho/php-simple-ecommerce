@@ -10,7 +10,7 @@
 
 <body>
     <div class="container">
-        <div class="card text-center">
+        <div class="card text-center mt-5">
             <div class="row m-auto justify-content-center">
                 <form action="./lib/auth.php" method="POST">
                     <h1 class="mb-3">Login</h1>

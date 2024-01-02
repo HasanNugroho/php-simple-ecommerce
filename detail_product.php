@@ -1,14 +1,13 @@
 <?php
 session_start();
-require('./koneksi.php');
-
 if (!isset($_SESSION['user_id'])){
     header("Location: ./login.php");
 }
+require('./lib/Product.php');
 
 $id = $_GET['id'];
-$query = mysqli_query($conn, "select * from products where id='$id'");
-$data = $query->fetch_array();
+$product = new Product();
+$data = $product->get_product_public_byId($id);
 ?>
 <!doctype html>
 <html lang="en">
@@ -78,7 +77,7 @@ $data = $query->fetch_array();
                 <p><?php echo $data['description'];?></p>
                 <p class="text-muted">Stock : <?php echo $data['stock'];?></p>
                 <!-- Add an input field for the quantity -->
-                <form action="./lib/cart.php" method="get">
+                <form action="./lib/cart.php" method="POST">
                     <div class="form-group">
                         <label for="quantity">Quantity:</label>
                         <input type="number" name="qty" value="1" max="<?php echo $data['stock'];?>" required>

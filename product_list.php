@@ -1,9 +1,11 @@
 <?php
 session_start();
-require('./koneksi.php');
 if (!isset($_SESSION['user_id'])){
     header("Location: ./login.php");
 }
+require('./lib/Product.php');
+$product = new Product();
+
 $userId = $_SESSION['user_id'];
 ?>
 <!doctype html>
@@ -69,6 +71,10 @@ $userId = $_SESSION['user_id'];
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
                 Tambah data
             </button>
+                <?php
+                $data = $product->get_private_products($userId);
+                if (is_array($data) || is_object($data)) {
+                    ?>
             <table class="table">
                 <thead>
                     <tr>
@@ -82,8 +88,8 @@ $userId = $_SESSION['user_id'];
                 </thead>
                 <tbody>
                     <?php
-                    $data = mysqli_query($conn,"select * from products where user_id = '$userId'");
-                    while($d = mysqli_fetch_assoc($data)){
+                    
+                    foreach($data as $d) {
                     ?>
                     </tr>
                         <th scope="row"><?php echo $d['code']; ?></th>
@@ -96,9 +102,12 @@ $userId = $_SESSION['user_id'];
                             <a href="./lib/product_process.php?action=delete&x=<?php echo $d['id']; ?>" class="btn btn-danger">Hapus</a>
                         </td>
                     </tr>
-                    <?php }?>
+                    <?php } ?>
                 </tbody>
             </table>
+                <?php } else {?>
+                    <div class="text-center">Produk tidak tersedia</div>
+                <?php }?>
         </div>
     </div>
 

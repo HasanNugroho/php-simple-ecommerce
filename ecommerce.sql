@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 18, 2023 at 08:00 PM
+-- Generation Time: Jan 02, 2024 at 06:16 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.1.25
 
@@ -71,6 +71,8 @@ CREATE TABLE `products` (
 CREATE TABLE `users` (
   `id` int(11) NOT NULL,
   `username` varchar(255) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `nim` int(11) NOT NULL,
   `password` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -88,7 +90,8 @@ ALTER TABLE `cart`
 -- Indexes for table `cart_item`
 --
 ALTER TABLE `cart_item`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `product_id` (`product_id`);
 
 --
 -- Indexes for table `products`
@@ -100,7 +103,8 @@ ALTER TABLE `products`
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `nim` (`nim`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -129,6 +133,16 @@ ALTER TABLE `products`
 --
 ALTER TABLE `users`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `cart_item`
+--
+ALTER TABLE `cart_item`
+  ADD CONSTRAINT `cart_item_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
